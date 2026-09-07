@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+console.log('authors.js cargado correctamente');
+
 
 let authors = [
     {

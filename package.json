@@ -1,18 +1,23 @@
 {
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.23.0"
   },
   "name": "proyectom2-mateozapata",
   "version": "1.0.0",
   "description": "API REST para miniBlog con Express y PostgreSQL",
   "main": "server.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
-  "keywords": ["express", "postgresql", "api", "miniblog"],
+  "keywords": [
+    "express",
+    "postgresql",
+    "api",
+    "miniblog"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs"
