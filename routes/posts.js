@@ -101,8 +101,8 @@ router.post('/', (req, res) => {
 
     const { title, content, author_id, published } = req.body;
 
-    if(!title || !content || ! author_id) {
-        return res.status(400).json({ error: 'Título, contenido y author_id son requeridos'})
+    if(!title || !content || !author_id) {
+        return res.status(400).json({ error: 'Título, contenido y author_id son requeridos'});
     }
 
     const newPost = {
