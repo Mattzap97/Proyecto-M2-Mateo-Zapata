@@ -33,7 +33,7 @@ let authors = [
 //GET /api/authors - Obtener todos los autores
 router.get('/', (req, res) => {
     
-    res.json(authors);
+    res.status(200).json(authors);
 })
 
 //GET /api/authors/:id - Obtener un autor por id
@@ -89,7 +89,7 @@ router.put('/:id', (req, res) => {
 })
 
 //DELETE /api/authors/:id - Eliminar un autor
-router.delete(':/id', (req, res) => {
+router.delete('/:id', (req, res) => {
 
     const index = authors.findIndex(a => a.id === parseInt(req.params.id));
     

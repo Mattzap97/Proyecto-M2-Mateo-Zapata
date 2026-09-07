@@ -4,13 +4,15 @@
   },
   "name": "proyectom2-mateozapata",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API REST para miniBlog con Express y PostgreSQL",
+  "main": "server.js",
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
-  "keywords": [],
+  "keywords": ["express", "postgresql", "api", "miniblog"],
   "author": "",
   "license": "ISC",
   "type": "commonjs"
