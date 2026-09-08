@@ -167,7 +167,37 @@ router.get('/author/:authorId', async (req, res) => {
 
 
 //POST /api/posts - Crear un nuevo post
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+
+    const {title, content, author_id, published} = req.body;
+
+    if(!title || !content || !author_id) {
+        return res.status(404).json({error: 'Título, contenido y author_id son necesarios para continuar'});
+    }
+
+    try {
+
+        const result = await pool.query('INSERT INTO posts (title, content, author_id, published) VALUES ($1, $2, $3, $4) RETURNING*',
+            [title, content, author_id, published || false]
+        );
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error('Error al crear un post', error);
+
+        if(error.code === '23503') {
+            return res.status(404).json({ error: 'El autor especificado no existe'});
+        }
+
+        res.status(500).json({ error: 'Error al crear un post'});
+        
+    }
+
+})
+
+/*router.post('/', (req, res) => {
 
     const { title, content, author_id, published } = req.body;
 
@@ -189,7 +219,7 @@ router.post('/', (req, res) => {
 
     res.status(201).json(newPost);
 
-})
+})*/
 
 
 //PUT /api/posts/:id - Actualizar un post
