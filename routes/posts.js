@@ -1,5 +1,12 @@
+const { loadEnvFile } = require('node:process');
+loadEnvFile('.env')
+
 const express = require('express');
 const router = express.Router();
+
+const pool = require('../src/db/config');
+
+
 console.log('posts.js cargado correctamente');
 
 
