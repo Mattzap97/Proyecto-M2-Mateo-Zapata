@@ -10,35 +10,6 @@ const pool = require('../src/db/config');
 console.log('authors.js cargado correctamente');
 
 
-let authors = [
-    {
-
-        id: 1,
-        name: 'Ana García',
-        email: 'ana@example.com',
-        bio: 'Desarrolladora full-stack apasionada por Node.js'
-
-    },
-
-    {
-
-        id: 2,
-        name: 'Carlos Ruiz',
-        email: 'carlos@example.com',
-        bio: 'Escritor técnico especializado en bases de datos'
-
-    },
-
-    {
-
-        id: 3,
-        name: 'María López',
-        email: 'maria@example.com',
-        bio: 'Ingeniera de software con foco en APIs REST'
-
-    }
-];
-
 //GET /api/authors - Obtener todos los autores
 router.get('/',  async (req, res) => {
 
@@ -54,7 +25,6 @@ router.get('/',  async (req, res) => {
 
     }
 })
-
 
 
 //GET /api/authors/:id - Obtener un autor por id
@@ -84,7 +54,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     const {name, email, bio} = req.body;
 
-    if(!name || !email) {
+    if(!name || !name.trim() || !email || !email.trim()) {
         return res.status(400).json({error: 'Nombre y email son requeridos'});
     }
 
@@ -111,6 +81,13 @@ router.post('/', async (req, res) => {
 //PUT /api/authors/:id - Actualizar un autor
 router.put('/:id', async (req, res) => {
     const {name, email, bio} = req.body;
+
+    if (name !== undefined && !name.trim()) {
+        return res.status(400).json({ error: 'El nombre no puede estar vacío'})
+    }
+    if (email !== undefined && !email.trim()) {
+        return res.status(400).json({error: 'El email no puede estar vacío'});
+    }
 
     try{
 
@@ -142,6 +119,10 @@ router.put('/:id', async (req, res) => {
 //DELETE /api/authors/:id - Eliminar un autor
 router.delete('/:id', async (req, res) => {
 
+    if(!Number.isInteger(Number(req.params.id)) || Number(req.params.id) <= 0) {
+        return res.status(400).json({error: 'El ID debe ser un número entero positivo'});
+    }
+
     try {
 
         const result = await pool.query('DELETE FROM authors WHERE id = $1', [req.params.id]);
@@ -154,8 +135,8 @@ router.delete('/:id', async (req, res) => {
 
     } catch ( error) {
 
-        console.error('Error al eliminar autor', message);
-        res.status(500).json({message: 'Error al eliminar autor'});
+        console.error('Error al eliminar autor', error);
+        res.status(500).json({error: 'Error al eliminar autor'});
 
     }
 })

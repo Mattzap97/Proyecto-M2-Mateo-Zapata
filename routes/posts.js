@@ -189,25 +189,31 @@ router.put('/:id', async (req, res) => {
 
         console.error('Error al actualizar post:', error);
         res.status(500).json({ error: 'Error al actualizar post'});
-        
+
     }
 })
 
 
 
 //DELETE /api/posts/:id - Eliminar un post
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
 
-    const index = posts.findIndex(p => p.id === parseInt(req.params.id));
+    try{
 
-    if(index === -1) {
-        return res.status(404).json({error: 'Post no encontrado'})
+        const result = await pool.query('DELETE FROM posts WHERE id = $1', [req.params.id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Post no encontrado'});
+        }
+
+        res.json({message: 'Post eliminado con éxito'});
+
+    } catch (error) {
+
+        console.error('Error al eliminar post', error);
+        res.status(500).json({error: 'Error al eliminar post'});
+
     }
-
-    posts.splice(index, 1)
-
-    res.json({message: 'Post eliminado con éxito'})
-
 })
 
 
