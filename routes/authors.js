@@ -137,7 +137,7 @@ router.post('/', async (req, res) => {
 })*/
 
 //PUT /api/authors/:id - Actualizar un autor
-router.put('/', async (req, res) => {
+router.put('/:id', async (req, res) => {
     const {name, email, bio} = req.body;
 
     try{
@@ -160,7 +160,7 @@ router.put('/', async (req, res) => {
         }
 
         res.status(500).json({error: 'Error al actualizar autor'});
-        
+
     }
 
 })
@@ -183,7 +183,26 @@ router.put('/', async (req, res) => {
 })*/
 
 //DELETE /api/authors/:id - Eliminar un autor
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
+
+    try {
+
+        const result = await pool.query('DELETE FROM authors WHERE id = $1', [req.params.id]);
+
+        if(result.rowCount === 0) {
+            return res.status(404).json({error: 'Autor no encontrado'});
+        }
+
+        res.json({message: 'Autor eliminado con éxito'});
+
+    } catch ( error) {
+
+        console.error('Error al eliminar autor', message);
+        res.status(500).json({message: 'Error al eliminar autor'});
+
+    }
+})
+/*router.delete('/:id', (req, res) => {
 
     const index = authors.findIndex(a => a.id === parseInt(req.params.id));
     
@@ -194,7 +213,7 @@ router.delete('/:id', (req, res) => {
     authors.splice(index, 1);
     res.json({ message: 'Autor eliminado con éxito'});
 
-})
+})*/
 
 
 module.exports = router;
