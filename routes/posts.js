@@ -64,7 +64,32 @@ let posts = [
 
 
 //GET /api/posts - Obtener todos los posts
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const { published } = req.query;
+
+    try{
+
+        let query = 'SELECT * FROM posts';
+        let params = []
+
+        if(published !== undefined) {
+            query += 'WHERE published = $1';
+            params.push(published === 'true');
+        }
+
+        query += ' ORDER BY created_at DESC';
+
+        const result = await pool.query(query, params);
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error('Error al obtener posts', error);
+        res.status.json({ error: 'Error al obtener posts'});
+        
+    }
+})
+/*router.get('/', (req, res) => {
 
     const { published } = req.query;
 
@@ -76,10 +101,11 @@ router.get('/', (req, res) => {
 
     res.json(posts);
 
-})
+})*/
 
 
 //GET /api/posts/:id - Obtener un post por id
+
 router.get('/:id', (req, res) => {
 
     const post = posts.find(p => p.id === parseInt(req.params.id));
