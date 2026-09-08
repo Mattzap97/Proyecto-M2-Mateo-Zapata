@@ -121,7 +121,7 @@ router.get('/:id', async (req, res) => {
 
         console.error('Error al obtener post', error);
         res.status(500).json({error: 'Error al obtener post'});
-        
+
     }
 })
 /*router.get('/:id', (req, res) => {
@@ -138,13 +138,32 @@ router.get('/:id', async (req, res) => {
 
 
 //GET /api/posts/author/:authorid - Obtener posts por autor
-router.get('/author/:authorId', (req, res) => {
+router.get('/author/:authorId', async (req, res) => {
+
+    try{
+
+        const result = await pool.query('SELECT * FROM posts WHERE author_id = $1', [req.params.authorId]); 
+
+        if(result.rows.length === 0) {
+            return res.status(404).json({error: 'Post por autor no encontrado'});
+        }
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error('Error al obtener posts por autor', error);
+        res.status(500).json({error: 'Error al obtener posts por autor'});
+
+    }
+})
+/*router.get('/author/:authorId', (req, res) => {
 
     const authorPosts = posts.filter(p => p.author_id === parseInt(req.params.authorId));
 
     res.json(authorPosts);
 
-})
+})*/
 
 
 //POST /api/posts - Crear un nuevo post
