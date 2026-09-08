@@ -49,7 +49,7 @@ router.get('/',  async (req, res) => {
 
     } catch (error) {
 
-        console.error('Error al obtener autores:', error.message);
+        console.error('Error al obtener autores:', error);
         res.status(500).json({error: 'Error al obtener autores'});
 
     }
@@ -74,7 +74,7 @@ router.get('/:id', async (req, res) => {
 
     } catch (error) {
 
-        console.error('Error al obtener autor', error.message)
+        console.error('Error al obtener autor', error)
         res.status(500).json({error: 'Error al obtener autor'});
 
     }
@@ -106,7 +106,7 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
 
-        console.error('Error al crear un autor', error.message);
+        console.error('Error al crear un autor', error);
 
         if(error.code === '23505') {
             return res.status(409).json({error: 'Este email ya está registrado'});
@@ -137,7 +137,34 @@ router.post('/', async (req, res) => {
 })*/
 
 //PUT /api/authors/:id - Actualizar un autor
-router.put('/:id', (req, res) => {
+router.put('/', async (req, res) => {
+    const {name, email, bio} = req.body;
+
+    try{
+
+        const result = await pool.query('UPDATE authors SET name = COALESCE($1, name), email = COALESCE($2, email), bio = COALESCE($3, bio) WHERE id = $4 RETURNING *',
+            [name, email, bio, req.params.id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'Autor no encontrado'});
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+        console.error('Error al actualizar autor', error);
+
+        if(error.code === '23505') {
+            return res.status(409).json({error: 'Este email ya está registrado'});
+        }
+
+        res.status(500).json({error: 'Error al actualizar autor'});
+        
+    }
+
+})
+/*router.put('/:id', (req, res) => {
 
     const author = authors.find(a => a.id === parseInt(req.params.id));
 
@@ -153,7 +180,7 @@ router.put('/:id', (req, res) => {
 
     res.json(author);
 
-})
+})*/
 
 //DELETE /api/authors/:id - Eliminar un autor
 router.delete('/:id', (req, res) => {
