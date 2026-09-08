@@ -5,7 +5,6 @@
 const { loadEnvFile } = require('node:process');
 const express = require('express');
 
-
 const authorsRouter = require('./routes/authors');
 const postsRouter = require('./routes/posts');
 
@@ -16,6 +15,28 @@ const PORT = process.env.PORT || 3000;
 
 //Middleware para parsear JSON
 app.use(express.json());
+
+//==========================================================================================================================
+//RUTA DE PRUEBA PARA CONFIRMAR CONEXIÓN EXPRESS -> POOL -> POSTGRESQL
+app.get('/api/test-db', async (req, res) => {
+    try {
+
+        const result = await pool.query('SELECT NOW()');
+
+        res.json({
+            message: 'Express está conectado a PostgreSQL',
+            databaseTime: result.rows[0].now
+        });
+
+    } catch (error) {
+        console.error('Error al consultar PostgreSQL:', error.message);
+
+        res.status(500).json({
+            error: 'Error al conectar con PostgreSQL'
+        });
+    }
+});
+//============================================================================================================================
 
 
 //Rutas

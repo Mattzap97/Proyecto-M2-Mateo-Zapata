@@ -1,5 +1,12 @@
+const { loadEnvFile } = require('node:process');
+loadEnvFile('.env')
+
 const express = require('express');
 const router = express.Router();
+
+const pool = require('../src/db/config');
+
+
 console.log('authors.js cargado correctamente');
 
 
@@ -33,10 +40,24 @@ let authors = [
 ];
 
 //GET /api/authors - Obtener todos los autores
-router.get('/', (req, res) => {
+router.get('/',  async (req, res) => {
+
+    try{
+
+        const result = await pool.query('SELECT * FROM authors ORDER BY NAME');
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error('Error al obtener autores:', error.message);
+        res.status(500).json({error: 'Error al obtener autores'});
+
+    }
+})
+/*router.get('/', (req, res) => {
     
     res.status(200).json(authors);
-})
+})*/
 
 //GET /api/authors/:id - Obtener un autor por id
 router.get('/:id', (req, res) => {
