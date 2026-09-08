@@ -76,11 +76,10 @@ router.get('/:id', async (req, res) => {
 
         console.error('Error al obtener autor', error.message)
         res.status(500).json({error: 'Error al obtener autor'});
-        
+
     }
     
 })
-
 /*router.get('/:id', (req, res) => {
 
     const author = authors.find(a => a.id === parseInt(req.params.id));
@@ -93,7 +92,31 @@ router.get('/:id', async (req, res) => {
 })*/
 
 //POST /api/authors - Crear un nuevo autor
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+    const {name, email, bio} = req.body;
+
+    if(!name || !email) {
+        return res.status(400).json({error: 'Nombre y email son requeridos'});
+    }
+
+    try {
+
+        const result = await pool.query('INSERT INTO authors (name, email, bio) VALUES ($1, $2, $3) RETURNING *', [name, email, bio || null]);
+        res.status(201).json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error('Error al crear un autor', error.message);
+
+        if(error.code === '23505') {
+            return res.status(409).json({error: 'Este email ya está registrado'});
+        }
+
+        res.status(500).json({error: 'Error al crear un autor'});
+        
+    }
+})
+/*router.post('/', (req, res) => {
 
     const {name, email, bio} = req.body;
 
@@ -111,7 +134,7 @@ router.post('/', (req, res) => {
     authors.push(newAuthor);
     res.status(201).json(newAuthor)
 
-})
+})*/
 
 //PUT /api/authors/:id - Actualizar un autor
 router.put('/:id', (req, res) => {
