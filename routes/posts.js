@@ -89,19 +89,6 @@ router.get('/', async (req, res) => {
         
     }
 })
-/*router.get('/', (req, res) => {
-
-    const { published } = req.query;
-
-    if(published !== undefined) {
-        const isPublished = published === 'true';
-        const filtered = posts.filter(p => p.published === isPublished);
-        return res.json(filtered);
-    }
-
-    res.json(posts);
-
-})*/
 
 
 //GET /api/posts/:id - Obtener un post por id
@@ -124,17 +111,6 @@ router.get('/:id', async (req, res) => {
 
     }
 })
-/*router.get('/:id', (req, res) => {
-
-    const post = posts.find(p => p.id === parseInt(req.params.id));
-
-    if(!post) {
-        return res.status(404).json({error: 'Post no encontrado'});
-    }
-
-    res.json(post);
-
-})*/
 
 
 //GET /api/posts/author/:authorid - Obtener posts por autor
@@ -157,13 +133,6 @@ router.get('/author/:authorId', async (req, res) => {
 
     }
 })
-/*router.get('/author/:authorId', (req, res) => {
-
-    const authorPosts = posts.filter(p => p.author_id === parseInt(req.params.authorId));
-
-    res.json(authorPosts);
-
-})*/
 
 
 //POST /api/posts - Crear un nuevo post
@@ -192,54 +161,38 @@ router.post('/', async (req, res) => {
         }
 
         res.status(500).json({ error: 'Error al crear un post'});
-        
+
     }
 
 })
 
-/*router.post('/', (req, res) => {
-
-    const { title, content, author_id, published } = req.body;
-
-    if(!title || !content || !author_id) {
-        return res.status(400).json({ error: 'Título, contenido y author_id son requeridos'});
-    }
-
-    const newPost = {
-
-        id: posts.length + 1,
-        title,
-        content,
-        author_id: parseInt(author_id),
-        published: published || false
-
-    }
-
-    posts.push(newPost);
-
-    res.status(201).json(newPost);
-
-})*/
 
 
 //PUT /api/posts/:id - Actualizar un post
-router.put('/:id', (req, res) => {
-
-    const post = posts.find(p => p.id === parseInt(req.params.id));
-
-    if(!post) {
-        return res.status(404).json({ error: 'Post no encontrado'});
-    }
+router.put('/:id', async (req, res) => {
 
     const {title, content, published} = req.body;
 
-    if(title) post.title = title;
-    if(content) post.content = content;
-    if(published !== undefined) post.published = published;
+    try {
 
-    res.json(post);
+        const result = await pool.query('UPDATE posts SET title = COALESCE($1, title), content = COALESCE($2, content), published = COALESCE($3, published) WHERE id = $4 RETURNING *',
+            [title, content, published, req.params.id]
+        );
 
+        if(result.rows.length === 0) {
+            return res.status(404).json({ error: 'Post no encontrado'});
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error('Error al actualizar post:', error);
+        res.status(500).json({ error: 'Error al actualizar post'});
+        
+    }
 })
+
 
 
 //DELETE /api/posts/:id - Eliminar un post
