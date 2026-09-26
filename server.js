@@ -13,10 +13,11 @@ app.use(express.json());  //Middleware para parsear JSON
 
 
 
+
 //RUTA RAÍZ
 app.get('/', (req, res) => {
     res.json({
-        message: 'Miniblog API',
+        message: 'Miniblog API funcionando correctamente',
         endpoints: {
             authors:'/api/authors',
             posts: '/api/posts'
