@@ -1,28 +1,30 @@
 const express = require('express');
 const router = express.Router();
 
-//ARRAYS EN MEMORIA LOCAL PARA DESPUÉS REEMPLAZAR CON LA BASE DE DATOS
+//ARRAYS CON DATOS EN MEMORIA LOCAL PARA DESPUÉS REEMPLAZAR CON LA BASE DE DATOS
 let authors = [
 
     {
-        id: 1,
+        id_author: 1,
         name: 'Ana García',
         email: 'ana@example.com',
         bio: 'Desarrolladora full-stack apasionada por Node.js'
     },
     {
-        id: 2,
+        id_author: 2,
         name: 'Carlos Ruiz',
         email: 'carlos@example.com',
         bio:'Escritor técnico especializado en bases de datos'
     },
     {
-        id: 3,
+        id_author: 3,
         name: 'María López',
         email: 'maria@example.com',
         bio: 'Ingeniería de software con foco en APIs REST'
     }
 ]
+
+
 
 //GET api/authors - OBTENER TODOS LOS AUTORES
 router.get('/', (req, res) => {
@@ -30,6 +32,8 @@ router.get('/', (req, res) => {
     res.json(authors);
 
 })
+
+
 
 //GET api/authors/:id - OBTENER UN AUTOR POR ID
 router.get('/:id', (req, res) => {
@@ -43,6 +47,9 @@ router.get('/:id', (req, res) => {
     res.json(author);
 
 })
+
+
+
 
 //POST /api/authors - CREAR UN NUEVO AUTOR
 router.post('/', (req, res) => {
@@ -66,6 +73,7 @@ router.post('/', (req, res) => {
     res.status(201).json(newAuthor);
 
 })
+
 
 
 //PUT /api/authors/:id - ACTUALIZAR UN AUTOR
