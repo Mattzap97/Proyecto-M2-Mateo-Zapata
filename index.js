@@ -2,6 +2,9 @@ const { loadEnvFile } = require('node:process');
 const express = require('express');
 
 
+const authorsRouter = require('./routes/authors');
+const postsRouter = require('./routes/posts');
+
 
 loadEnvFile('.env');
 const app = express();
@@ -11,7 +14,8 @@ app.use(express.json());  //Middleware para parsear JSON
 
 //============================== RUTAS ========================================
 
-
+app.use('api/authors', authorsRouter);
+app.use('api/posts', postsRouter);
 
 
 //RUTA RAÍZ
