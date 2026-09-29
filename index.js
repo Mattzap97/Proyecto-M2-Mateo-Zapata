@@ -14,8 +14,8 @@ app.use(express.json());  //Middleware para parsear JSON
 
 //============================== RUTAS ========================================
 
-app.use('api/authors', authorsRouter);
-app.use('api/posts', postsRouter);
+app.use('/api/authors', authorsRouter);
+app.use('/api/posts', postsRouter);
 
 
 //RUTA RAÍZ

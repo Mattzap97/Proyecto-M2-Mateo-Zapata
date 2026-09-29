@@ -5,19 +5,19 @@ const router = express.Router();
 let authors = [
 
     {
-        id_author: 1,
+        id: 1,
         name: 'Ana García',
         email: 'ana@example.com',
         bio: 'Desarrolladora full-stack apasionada por Node.js'
     },
     {
-        id_author: 2,
+        id: 2,
         name: 'Carlos Ruiz',
         email: 'carlos@example.com',
         bio:'Escritor técnico especializado en bases de datos'
     },
     {
-        id_author: 3,
+        id: 3,
         name: 'María López',
         email: 'maria@example.com',
         bio: 'Ingeniería de software con foco en APIs REST'
