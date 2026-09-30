@@ -1,6 +1,6 @@
 -- Tabla de autores
 CREATE TABLE authors (
-  id SERIAL PRIMARY KEY,
+  id_author INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(150) UNIQUE NOT NULL,
   bio TEXT,
@@ -9,13 +9,13 @@ CREATE TABLE authors (
 
 -- Tabla de posts
 CREATE TABLE posts (
-  id SERIAL PRIMARY KEY,
+  id_post INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   title VARCHAR(200) NOT NULL,
   content TEXT NOT NULL,
   author_id INTEGER NOT NULL,
   published BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE
+  FOREIGN KEY (author_id) REFERENCES authors(id_author) ON DELETE CASCADE
 );
 
 -- Insertar datos de ejemplo
