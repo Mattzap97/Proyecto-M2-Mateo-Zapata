@@ -76,10 +76,10 @@ router.get('/:id', (req, res) => {
 
 
 
-//GET /api/posts/author/author:id - OBTENER POSTS POR AUTOR
-router.get('/author/authorId', (req, res) => {
+//GET /api/posts/author/:authorid - OBTENER POSTS POR AUTOR
+router.get('/author/:authorId', (req, res) => {
 
-    const authorPosts = posts.filter(p => p.id === parseInt(req.params.authorId));
+    const authorPosts = posts.filter(p => p.author_id === parseInt(req.params.authorId));
     res.json(authorPosts);
 
 })
