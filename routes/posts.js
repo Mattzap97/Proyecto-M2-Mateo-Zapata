@@ -45,12 +45,12 @@ let posts = [
 //GET /api/posts - OBTENER TODOS LOS POSTS
 router.get('/', (req, res) => {
 
-    const { published } = req.body;
+    const { published } = req.query;
 
     if(published !== undefined) {
         
         const isPublished = published === 'true';
-        const filtered = posts.filter(p => p.id === parseInt(req.params.id));
+        const filtered = posts.filter(p => p.published === isPublished);
         return res.json(filtered);
 
     }
@@ -76,7 +76,7 @@ router.get('/:id', (req, res) => {
 
 
 
-//GET /api/posts/author/:authorid - OBTENER POSTS POR AUTOR
+//GET /api/posts/author/:authorId - OBTENER POSTS POR AUTOR
 router.get('/author/:authorId', (req, res) => {
 
     const authorPosts = posts.filter(p => p.author_id === parseInt(req.params.authorId));
