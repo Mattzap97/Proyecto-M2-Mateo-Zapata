@@ -1,50 +1,53 @@
+const { loadEnvFile } = require('node:process');
+loadEnvFile('.env');
+
+
 const express = require('express');
 const router = express.Router();
 
-//ARRAYS CON DATOS EN MEMORIA LOCAL PARA DESPUÉS REEMPLAZAR CON LA BASE DE DATOS
-let authors = [
+const pool = require('../config/dbConnect');
 
-    {
-        id: 1,
-        name: 'Ana García',
-        email: 'ana@example.com',
-        bio: 'Desarrolladora full-stack apasionada por Node.js'
-    },
-    {
-        id: 2,
-        name: 'Carlos Ruiz',
-        email: 'carlos@example.com',
-        bio:'Escritor técnico especializado en bases de datos'
-    },
-    {
-        id: 3,
-        name: 'María López',
-        email: 'maria@example.com',
-        bio: 'Ingeniería de software con foco en APIs REST'
-    }
-]
-
+/*=====================================================================================================================================
+                                                ENDPOINTS CRUD PARA AUTHORS
+===========================================================================================================================================*/
 
 
 //GET api/authors - OBTENER TODOS LOS AUTORES
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 
-    res.json(authors);
+    try{
+
+        const result = await pool.query('SELECT * FROM authors ORDER BY name');
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error('Error al obtener autores', error);
+        res.status(500).json({error: 'Error al obtener autores'});
+    }
 
 })
 
 
 
 //GET api/authors/:id - OBTENER UN AUTOR POR ID
-router.get('/:id', (req, res) => {
+router.get('/:id',  async (req, res) => {
 
-    const author = authors.find(a => a.id === parseInt(req.params.id));
+    try {
+        
+        const result = await pool.query('SELECT FROM authors WHERE id_author = $1', [req.params.id_author]);
 
-    if(!author) {
-        return res.status(404).json({ error: 'No se encontró al autor'})
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No se encontró el autor'})
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error('Error al obtener autor:', error);
+        res.status(500).json({error: 'Error al obtener autor'});
     }
-
-    res.json(author);
 
 })
 
@@ -52,62 +55,85 @@ router.get('/:id', (req, res) => {
 
 
 //POST /api/authors - CREAR UN NUEVO AUTOR
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
 
     const { name, email, bio } = req.body;
-
     if(!name || !email) {
         return res.status(400).json({error: 'Nombre y email son requeridos'})
     }
 
-    const newAuthor = {
-        
-        id: authors.length + 1,
-        name,
-        email,
-        bio: bio || ''
+    try{
 
+        const result = await pool.query('INSERT INTO authors (name, email, bio) VALUES ($1, $2, $3) RETURNING *', 
+            [name, email, bio || null]
+        );
+
+        res.status(201).json(result);
+
+    } catch (error) {
+        console.error('Error al crear autor:', error);
+
+        if (error.code === '23505') {
+            return res.status(409).json({error: 'El email ya está registrado'});
+        }
+
+        res.status(500).json({error: 'Error al crear autor'});
     }
 
-    authors.push(newAuthor);
-    res.status(201).json(newAuthor);
-
 })
+
 
 
 
 //PUT /api/authors/:id - ACTUALIZAR UN AUTOR
-router.put('/:id', (req, res) => {
-    const author = authors.find(a => a.id === parseInt(req.params.id));
-
-    if(!author) {
-        return res.status(404).json({error: 'No se encontró al autor'})
-    }
-
+router.put('/:id', async (req, res) => {
     const { name, email, bio } = req.body;
 
-    if(name) author.name = name;
-    if(email) author.email = email;
-    if(bio !== undefined) author.bio = bio;
+    try{
 
-    res.json(author);
+        const result = await pool.query('UPDATE authors SET name = COALESCE($1, name), email = COALESCE($2, email), bio = COALESCE($3, bio) WHERE id_author = $4 RETURNING *',
+            [name, email, bio, req.params.id_author]
+        );
 
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'No se encontró el autor'});
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+        console.error('Error al actualizar autor:', error);
+
+        if (error.code = '23505') {
+            return res.status(409).json({error: 'El email ya está registrado'});
+        }
+
+        res.status(500).json({error: 'Error al actualizar autor'});
+    }
 })
 
 
 
+
 //DELETE /api/authors/:id - ELIMINAR UN AUTOR
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
 
-    const index = authors.findIndex( a => a.id === parseInt(req.params.id));
+    try{
 
-    if(index === -1) {
-        return res.status(404).json({error: 'No se encontró al autor'})
+        const result = await pool.query('DELETE FROM authors WHERE id_author = $1', [req.params.id_author]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({error: 'No se encontró el autor'});
+        }
+
+        res.json({msg: 'Autor eliminado exitosamente'});
+
+    } catch (error) {
+
+        console.error('Error al eliminar autor:', error);
+        res.status(500).json({error: 'Error al eliminar autor'});
     }
-
-    authors.splice(index, 1);
-    res.json({ message: 'Autor eliminado exitosamente'})
-
+    
 })
 
 module.exports = router;
