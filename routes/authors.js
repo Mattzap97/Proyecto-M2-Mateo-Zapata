@@ -69,7 +69,10 @@ router.post('/', async (req, res) => {
             [name, email, bio || null]
         );
 
-        res.status(201).json(result);
+        res.status(201).json({
+            message: 'Autor creado extitosamente',
+            autor: result.rows[0]
+        });
 
     } catch (error) {
         console.error('Error al crear autor:', error);

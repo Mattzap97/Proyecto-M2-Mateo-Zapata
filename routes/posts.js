@@ -14,14 +14,14 @@ const pool = require('../config/dbConnect');
 
 //GET /api/posts - OBTENER TODOS LOS POSTS
 router.get('/',  async (req, res) => {
-    const { published } = req.body;
+    const { published } = req.query;
 
     try{
         let query = 'SELECT * FROM posts';
         let params = [];
 
         if (published !== undefined) {
-            query += 'WHERE published = $1';
+            query += ' WHERE published = $1';
             params.push(published === 'true');
         }
 
@@ -75,6 +75,10 @@ router.get('/author/:authorId', async (req, res) => {
             [req.params.authorId]
         );
 
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No se encontró post relacionado al autor'})
+        }
+
         res.json(result.rows);
 
     } catch (error) {
@@ -103,7 +107,10 @@ router.post('/', async (req, res) => {
             [title, content, author_id, published || false]
         );
 
-        res.status(201).json(result.rows[0]);
+        res.status(201).json({
+            message: 'Post creado exitosamente',
+            post: result.rows[0]
+        });
 
     } catch (error) {
         console.error('Error al crear post:', error);
