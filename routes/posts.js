@@ -1,148 +1,170 @@
+const { loadEnvFile } = require('node:process');
+loadEnvFile('.env');
+
+
 const express = require('express');
 const router = express.Router();
 
-//ARRAYS CON DATOS EN MEMORIA LOCAL PARA DESPUÉS REEMPLAZAR CON LA BASE DE DATOS
-let posts = [
+const pool = require('../config/dbConnect');
 
-    {
-        id: 1,
-        title: 'Introducción a Node.js',
-        content: 'Node.js es un runtime de JavaScript...',
-        author_id: 1,
-        published: true
-    },
-    {
-        id: 2,
-        title: 'PostgreSQl vs MySQL',
-        content: 'Ambas bases de datos tienen ventajas...',
-        author_id: 2,
-        published: true
-    },
-    {
-        id: 3,
-        title: 'APIs RESTful',
-        content: 'REST es un estilo arquitectónico...',
-        author_id: 1,
-        published: true
-    },
-    {
-        id: 4,
-        title: 'Manejo de errores en Express',
-        content: 'El manejo apropiado de errores...',
-        author_id: 3,
-        published: false
-    },
-    {
-        id: 5,
-        title: 'Async/Await explicado',
-        content: 'Las promesas simplifican el código asíncrono...',
-        author_id: 1,
-        published: false
-    }
-]
+/*=================================================================================================================================================================
+                                                        ENDPOINTS CRUD PARA POSTS
+====================================================================================================================================================================*/
 
 
 //GET /api/posts - OBTENER TODOS LOS POSTS
-router.get('/', (req, res) => {
+router.get('/',  async (req, res) => {
+    const { published } = req.body;
 
-    const { published } = req.query;
+    try{
+        let query = 'SELECT * FROM posts';
+        let params = [];
 
-    if(published !== undefined) {
-        
-        const isPublished = published === 'true';
-        const filtered = posts.filter(p => p.published === isPublished);
-        return res.json(filtered);
+        if (published !== undefined) {
+            query += 'WHERE published = $1';
+            params.push(published === 'true');
+        }
+
+        query += 'ORDER BY created_at DESC';
+
+        const result = await pool.query(query, params);
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error('Error al obtener posts:', error);
+        res.status(500).json({error: 'Error al obtener posts'});
 
     }
 
-    res.json(posts);
-
 })
+
 
 
 
 //GET api/posts/:id - OBTENER UN POST POR ID
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
 
-    const post = posts.find(p => p.id === parseInt(req.params.id));
+    try{
 
-    if(!post) {
-        return res.status(404).json({ error: 'No se encontró el post'});
+        const result = await pool.query('SELECT * FROM posts WHERE id_post = $1', [req.params.id_post]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No se pudo encontrar el post'});
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error('Error al obtener el post:', error);
+        res.status(500).json({error: 'Error al obtener el post'})
     }
 
-    res.json(post);
-
 })
+
 
 
 
 //GET /api/posts/author/:authorId - OBTENER POSTS POR AUTOR
-router.get('/author/:authorId', (req, res) => {
+router.get('/author/:authorId', async (req, res) => {
 
-    const authorPosts = posts.filter(p => p.author_id === parseInt(req.params.authorId));
-    res.json(authorPosts);
+    try {
+
+        const result = await pool.query ('SELECT FROM posts WHERE author_id = $1 ORDER BY created_at DESC',
+            [req.params.authorId]
+        );
+
+        res.json(result.rows);
+
+    } catch (error) {
+
+        console.error('Error obteniendo posts del autor:', error);
+        res.status(500).json({error: 'Error obteniendo posts del autor'});
+
+    }
 
 })
 
 
 
-//POST api/posts - CREAR UN NUEVO POST
-router.post('/', (req, res) => {
 
+//POST api/posts - CREAR UN NUEVO POST
+router.post('/', async (req, res) => {
     const { title, content, author_id, published } = req.body;
 
     if(!title || !content || !author_id) {
         return res.status(400).json({ error: 'Título, contenido y author_id son requeridos'});
     }
 
-    const newPost = {
-        id: posts.length + 1,
-        title,
-        content,
-        author_id: parseInt(author_id),
-        published: published || false
+    try {
+
+        const result = await pool.query('INSERT INTO posts (title, content, author_id, published) VALUES ($1, $2, $3, $4) RETURNING *',
+            [title, content, author_id, published || false]
+        );
+
+        res.status(201).json(result.rows[0]);
+
+    } catch (error) {
+        console.error('Error al crear post:', error);
+
+        if (error.code = '23503') {
+            return res.status(404).json({error: 'El autor especificado no existe'});
+        }
+
+        res.status(500).json({error: 'Error al crear post'});
     }
 
-    posts.push(newPost);
-    res.status(201).json(newPost);
-
 })
+
 
 
 
 //PUT api/posts/:id - ACTUALIZAR UN POST
-router.put('/:id', (req, res) => {
-
-    const post = posts.find(p => p.id === parseInt(req.params.id));
-
-    if(!post) {
-        return res.status(404).json({ error: 'No se encontró el post'});
-    }
-
+router.put('/:id', async (req, res) => {
     const { title, content, published } = req.body;
 
-    if(title) post.title = title;
-    if(content) post.content = content;
-    if(published !== undefined) post.published = published;
+    try{
 
-    res.json(post);
+        const result = await pool.query('UPDATE posts SET title = COALESCE($1, title), content = COALESCE($2, content), published = COALESCE ($3, published) WHERE id_post = $4 RETURNING *',
+            [title, content, published, req.params.id_post]
+        );
 
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No se encontró el post'});
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error('Error al actualizar el post:', error);
+        res.status(500).json({error: 'Error al actualizar el post'});
+
+    }
 })
 
 
 
+
 //DELETE /api/posts/:id - ELIMINAR UN POST
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
 
-    const index = posts.findIndex(p => p.id === parseInt(req.params.id));
+    try{
 
-    if(index === -1) {
-        return res.status(404).json({error: 'No se encontró el post'});
+        const result = await pool.query('DELETE FROM posts WHERE id_post = $1', [req.params.id_post]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({error: 'No se encontró el post'});
+        }
+
+        res.json({msg: 'Post eliminado exitosamente'});
+
+    } catch (error) {
+
+        console.error('Error al eliminar post:', error);
+        res.status(500).json({error: 'Error al eliminar post'});
     }
-
-    posts.splice(index, 1);
-    res.json({ message: 'Post eliminado exitosamente'});
-
 })
 
 
