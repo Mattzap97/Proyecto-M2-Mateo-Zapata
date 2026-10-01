@@ -25,7 +25,7 @@ router.get('/',  async (req, res) => {
             params.push(published === 'true');
         }
 
-        query += 'ORDER BY created_at DESC';
+        query += ' ORDER BY created_at ASC';
 
         const result = await pool.query(query, params);
         res.json(result.rows);
@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
 
     try{
 
-        const result = await pool.query('SELECT * FROM posts WHERE id_post = $1', [req.params.id_post]);
+        const result = await pool.query('SELECT * FROM posts WHERE id_post = $1', [req.params.id]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({error: 'No se pudo encontrar el post'});
@@ -71,7 +71,7 @@ router.get('/author/:authorId', async (req, res) => {
 
     try {
 
-        const result = await pool.query ('SELECT FROM posts WHERE author_id = $1 ORDER BY created_at DESC',
+        const result = await pool.query ('SELECT * FROM posts WHERE author_id = $1 ORDER BY created_at DESC',
             [req.params.authorId]
         );
 
@@ -108,7 +108,7 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.error('Error al crear post:', error);
 
-        if (error.code = '23503') {
+        if (error.code === '23503') {
             return res.status(404).json({error: 'El autor especificado no existe'});
         }
 
@@ -127,7 +127,7 @@ router.put('/:id', async (req, res) => {
     try{
 
         const result = await pool.query('UPDATE posts SET title = COALESCE($1, title), content = COALESCE($2, content), published = COALESCE ($3, published) WHERE id_post = $4 RETURNING *',
-            [title, content, published, req.params.id_post]
+            [title, content, published, req.params.id]
         );
 
         if (result.rows.length === 0) {
@@ -152,7 +152,7 @@ router.delete('/:id', async (req, res) => {
 
     try{
 
-        const result = await pool.query('DELETE FROM posts WHERE id_post = $1', [req.params.id_post]);
+        const result = await pool.query('DELETE FROM posts WHERE id_post = $1', [req.params.id]);
 
         if (result.rowCount === 0) {
             return res.status(404).json({error: 'No se encontró el post'});
