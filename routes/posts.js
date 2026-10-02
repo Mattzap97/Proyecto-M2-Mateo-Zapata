@@ -141,7 +141,10 @@ router.put('/:id', async (req, res) => {
             return res.status(404).json({error: 'No se encontró el post'});
         }
 
-        res.json(result.rows[0]);
+        res.status(200).json({
+            message: 'Post actualizado con éxito',
+            post: result.rows[0]
+        });
 
     } catch (error) {
 

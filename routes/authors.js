@@ -103,7 +103,10 @@ router.put('/:id', async (req, res) => {
             return res.status(404).json({ error: 'No se encontró el autor'});
         }
 
-        res.json(result.rows[0]);
+        res.status(200).json({
+            message: 'Autor actualizado con éxito',
+            autor: result.rows[0]
+        });
 
     } catch (error) {
         console.error('Error al actualizar autor:', error);
