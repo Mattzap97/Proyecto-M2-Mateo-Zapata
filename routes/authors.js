@@ -70,7 +70,7 @@ router.post('/', async (req, res) => {
         );
 
         res.status(201).json({
-            message: 'Autor creado extitosamente',
+            message: 'Autor creado exitosamente',
             autor: result.rows[0]
         });
 
