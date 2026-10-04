@@ -4,7 +4,7 @@ const router = express.Router();
 
 const pool = require('../config/dbConnect');
 
-const { validarPost, validarId } = require('../utils/validators.js');
+const { validarPost, validarId, validarPublished } = require('../utils/validators.js');
 
 /*=================================================================================================================================================================
                                                         ENDPOINTS CRUD PARA POSTS
@@ -15,6 +15,12 @@ const { validarPost, validarId } = require('../utils/validators.js');
 router.get('/',  async (req, res) => {
 
     const { published } = req.query;
+
+    const errorValidacion = validarPublished(published);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
 
     try{
         let query = 'SELECT * FROM posts';
