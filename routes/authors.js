@@ -7,6 +7,8 @@ const router = express.Router();
 
 const pool = require('../config/dbConnect');
 
+const { validarAutor } = require('../utils/validators.js');
+
 /*=====================================================================================================================================
                                                 ENDPOINTS CRUD PARA AUTHORS
 ===========================================================================================================================================*/
@@ -59,8 +61,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
 
     const { name, email, bio } = req.body;
-    if(!name || !email) {
-        return res.status(400).json({error: 'Nombre y email son requeridos'})
+    
+    const errorValidacion = validarAutor(name, email);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion})
     }
 
     try{

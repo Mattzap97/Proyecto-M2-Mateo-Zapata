@@ -7,6 +7,8 @@ const router = express.Router();
 
 const pool = require('../config/dbConnect');
 
+const { validarPost } = require('../utils/validators.js');
+
 /*=================================================================================================================================================================
                                                         ENDPOINTS CRUD PARA POSTS
 ====================================================================================================================================================================*/
@@ -97,8 +99,10 @@ router.get('/author/:authorId', async (req, res) => {
 router.post('/', async (req, res) => {
     const { title, content, author_id, published } = req.body;
 
-    if(!title || !content || !author_id) {
-        return res.status(400).json({ error: 'Título, contenido y author_id son requeridos'});
+    const errorValidacion = validarPost(title, content, author_id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
     }
 
     try {
