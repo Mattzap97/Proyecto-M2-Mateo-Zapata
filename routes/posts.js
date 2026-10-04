@@ -4,7 +4,7 @@ const router = express.Router();
 
 const pool = require('../config/dbConnect');
 
-const { validarPost } = require('../utils/validators.js');
+const { validarPost, validarId } = require('../utils/validators.js');
 
 /*=================================================================================================================================================================
                                                         ENDPOINTS CRUD PARA POSTS
@@ -13,6 +13,7 @@ const { validarPost } = require('../utils/validators.js');
 
 //GET /api/posts - OBTENER TODOS LOS POSTS
 router.get('/',  async (req, res) => {
+
     const { published } = req.query;
 
     try{
@@ -43,6 +44,13 @@ router.get('/',  async (req, res) => {
 
 //GET api/posts/:id - OBTENER UN POST POR ID
 router.get('/:id', async (req, res) => {
+
+    const errorValidacion = validarId(req.params.id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
+    
 
     try{
 
@@ -130,6 +138,13 @@ router.post('/', async (req, res) => {
 
 //PUT api/posts/:id - ACTUALIZAR UN POST
 router.put('/:id', async (req, res) => {
+
+    const errorValidacion = validarId(req.params.id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
+
     const { title, content, published } = req.body;
 
     try{
@@ -160,6 +175,12 @@ router.put('/:id', async (req, res) => {
 
 //DELETE /api/posts/:id - ELIMINAR UN POST
 router.delete('/:id', async (req, res) => {
+
+    const errorValidacion = validarId(req.params.id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
 
     try{
 
