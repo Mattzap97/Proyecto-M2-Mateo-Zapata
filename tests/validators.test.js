@@ -1,11 +1,11 @@
 import { describe, test, expect } from 'vitest';
 import validators from '../utils/validators.js';
 
-const { validarAutor, validarPost } = validators;
+const { validarAutor, validarPost, validarId, validarPublished } = validators;
 
-/*==========================================================================================================================================
-                                                    TEST PARA VALIDAR AUTOR
-====================================================================================================================================================*/
+/*=========================================================================================================================================================================
+                                                            TEST PARA VALIDAR AUTOR
+==========================================================================================================================================================================*/
 describe('validarAutor', () => {
 
     test('Acepta un autor válido', () => {
@@ -34,8 +34,28 @@ describe('validarAutor', () => {
 })
 
 
+/*===================================================================================================================================================================
+                                                            TEST PARA VALIDAR ID
+=====================================================================================================================================================================*/
+
+describe('validarId', () => {
+
+    test('Acepta un ID válido', () => {
+        expect(validarId('12')).toBe(null);
+    })
+
+    test('Rechaza un ID que no es númerico', () => {
+        expect(validarId('abc')).toContain('número');
+    })
+
+    test('Rechaza un ID menor o igual a 0', () => {
+        expect(validarId('0')).toContain('mayor que 0');
+    })
+})
+
+
 /*=======================================================================================================================================================
-                                                    TEST PARA VALIDAR POSTS
+                                                        TEST PARA VALIDAR POSTS
 =========================================================================================================================================================*/
 
 describe('validarPost', () => {
@@ -65,4 +85,29 @@ describe('validarPost', () => {
     })
 
 
+})
+
+
+/*====================================================================================================================================================================
+                                                        TEST PARA VALIDAR PUBLISHED
+=========================================================================================================================================================================*/
+
+describe('validarPublished', () => {
+
+    test('Acepta true', () => {
+        expect(validarPublished('true')).toBe(null);
+    })
+
+    test('Acepta false', () => {
+        expect(validarPublished('false')).toBe(null);
+    })
+
+    test('Acepta undefined porque es opcional', () => {
+        expect(validarPublished(undefined)).toBe(null);
+    })
+
+    test('Rechaza un valor diferente de true o false', () => {
+        expect(validarPublished('hola')).toContain('true o false');
+    })
+    
 })
