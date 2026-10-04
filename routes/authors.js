@@ -4,7 +4,7 @@ const router = express.Router();
 
 const pool = require('../config/dbConnect');
 
-const { validarAutor } = require('../utils/validators.js');
+const { validarAutor, validarId } = require('../utils/validators.js');
 
 /*=====================================================================================================================================
                                                 ENDPOINTS CRUD PARA AUTHORS
@@ -32,6 +32,12 @@ router.get('/', async (req, res) => {
 
 //GET api/authors/:id - OBTENER UN AUTOR POR ID
 router.get('/:id', async (req, res) => {
+
+    const errorValidacion = validarId(req.params.id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion})
+    }
 
     try {
         
