@@ -101,6 +101,12 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const { name, email, bio } = req.body;
 
+    const errorValidacion = validarId(req.params.id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
+
     try{
 
         const result = await pool.query('UPDATE authors SET name = COALESCE($1, name), email = COALESCE($2, email), bio = COALESCE($3, bio) WHERE id_author = $4 RETURNING *',
@@ -132,6 +138,12 @@ router.put('/:id', async (req, res) => {
 
 //DELETE /api/authors/:id - ELIMINAR UN AUTOR
 router.delete('/:id', async (req, res) => {
+
+    const errorValidacion = validarId(req.params.id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
 
     try{
 
