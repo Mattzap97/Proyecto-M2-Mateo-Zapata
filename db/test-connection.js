@@ -2,7 +2,7 @@ const { loadEnvFile } = require("node:process");
 loadEnvFile('.env');
 
 
-const pool = require('../config/dbConnect')
+const pool = require('../src/config/dbConnect')
 
 async function testConnection() {
     try{
