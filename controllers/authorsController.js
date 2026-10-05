@@ -70,7 +70,7 @@ const actualizarAutor = async (req, res) => {
 
     const { name, email, bio } = req.body;
 
-     try{
+    try{
 
         const result = await pool.query('UPDATE authors SET name = COALESCE($1, name), email = COALESCE($2, email), bio = COALESCE($3, bio) WHERE id_author = $4 RETURNING *',
             [name, email, bio, req.params.id]
@@ -97,11 +97,34 @@ const actualizarAutor = async (req, res) => {
 }
 
 
+const eliminarAutor = async (req, res) => {
+
+    try{
+
+        const result = await pool.query('DELETE FROM authors WHERE id_author = $1', [req.params.id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({error: 'No se encontró el autor'});
+        }
+
+        res.json({message: 'Autor eliminado exitosamente'});
+
+    } catch (error) {
+
+        console.error('Error al eliminar autor:', error);
+        res.status(500).json({error: 'Error al eliminar autor'});
+
+    }
+
+}
+
+
 
 
 module.exports = {
     obtenerAutores,
     obtenerAutor,
     crearAutor,
-    actualizarAutor
+    actualizarAutor,
+    eliminarAutor
 }
