@@ -2,9 +2,10 @@
 const express = require('express');
 const router = express.Router();
 
-const pool = require('../config/dbConnect');
+//const pool = require('../config/dbConnect');
 
 const { validarAutor, validarId } = require('../utils/validators.js');
+const { obtenerAutores } = require('../controllers/authorsController.js')
 
 /*=====================================================================================================================================
                                                 ENDPOINTS CRUD PARA AUTHORS
@@ -12,7 +13,7 @@ const { validarAutor, validarId } = require('../utils/validators.js');
 
 
 //GET api/authors - OBTENER TODOS LOS AUTORES
-router.get('/', async (req, res) => {
+/*router.get('/', async (req, res) => {
 
     try{
 
@@ -25,7 +26,8 @@ router.get('/', async (req, res) => {
         res.status(500).json({error: 'Error al obtener autores'});
     }
 
-})
+})*/
+router.get('/', obtenerAutores);
 
 
 
