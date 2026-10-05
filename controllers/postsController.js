@@ -101,9 +101,38 @@ const crearPost = async (req, res) => {
 }
 
 
+
+const actualizarPost = async (req, res) => {
+
+    const { title, content, published } = req.body;
+
+    try{
+
+        const result = await pool.query('UPDATE posts SET title = COALESCE($1, title), content = COALESCE($2, content), published = COALESCE ($3, published) WHERE id_post = $4 RETURNING *',
+            [title, content, published, req.params.id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No se encontró el post'});
+        }
+
+        res.status(200).json({
+            message: 'Post actualizado con éxito',
+            post: result.rows[0]
+        });
+
+    } catch (error) {
+
+        console.error('Error al actualizar el post:', error);
+        res.status(500).json({error: 'Error al actualizar el post'});
+
+    }
+}
+
 module.exports = {
     obtenerPosts,
     obtenerPost,
     obtenerPostsPorAutor,
-    crearPost
+    crearPost,
+    actualizarPost
 }
