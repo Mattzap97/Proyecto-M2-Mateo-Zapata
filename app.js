@@ -5,8 +5,8 @@
 const express = require('express');
 
 
-const authorsRouter = require('./routes/authors');
-const postsRouter = require('./routes/posts');
+const authorsRouter = require('./src/routes/authors');
+const postsRouter = require('./src/routes/posts');
 
 const app = express();
 app.use(express.json());  //Middleware para parsear JSON

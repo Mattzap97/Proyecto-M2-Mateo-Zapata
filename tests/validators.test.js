@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import validators from '../utils/validators.js';
+import validators from '../src/utils/validators.js';
 
 const { validarAutor, validarPost, validarId, validarPublished } = validators;
 

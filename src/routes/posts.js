@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 
-const pool = require('../config/dbConnect');
 
 const { validarPost, validarId, validarPublished } = require('../utils/validators.js');
 const { obtenerPosts, obtenerPost, obtenerPostsPorAutor, crearPost, actualizarPost, eliminarPost } = require('../controllers/postsController.js');

@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 
-//const pool = require('../config/dbConnect');
 
 const { validarAutor, validarId } = require('../utils/validators.js');
 const { obtenerAutores, obtenerAutor, crearAutor, actualizarAutor, eliminarAutor } = require('../controllers/authorsController.js')
