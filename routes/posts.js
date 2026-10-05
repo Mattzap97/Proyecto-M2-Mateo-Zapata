@@ -5,7 +5,7 @@ const router = express.Router();
 const pool = require('../config/dbConnect');
 
 const { validarPost, validarId, validarPublished } = require('../utils/validators.js');
-const { obtenerPosts, obtenerPost, obtenerPostsPorAutor, crearPost, actualizarPost } = require('../controllers/postsController.js');
+const { obtenerPosts, obtenerPost, obtenerPostsPorAutor, crearPost, actualizarPost, eliminarPost } = require('../controllers/postsController.js');
 
 /*=================================================================================================================================================================
                                                         ENDPOINTS CRUD PARA POSTS
@@ -96,7 +96,7 @@ router.put('/:id', (req, res, next) => {
 
 
 //DELETE /api/posts/:id - ELIMINAR UN POST
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', (req, res, next) => {
 
     const errorValidacion = validarId(req.params.id);
 
@@ -104,22 +104,9 @@ router.delete('/:id', async (req, res) => {
         return res.status(400).json({error: errorValidacion});
     }
 
-    try{
+    next();
 
-        const result = await pool.query('DELETE FROM posts WHERE id_post = $1', [req.params.id]);
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({error: 'No se encontró el post'});
-        }
-
-        res.json({msg: 'Post eliminado exitosamente'});
-
-    } catch (error) {
-
-        console.error('Error al eliminar post:', error);
-        res.status(500).json({error: 'Error al eliminar post'});
-    }
-})
+}, eliminarPost)
 
 
 module.exports = router;

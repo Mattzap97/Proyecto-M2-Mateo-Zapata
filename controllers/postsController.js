@@ -127,12 +127,39 @@ const actualizarPost = async (req, res) => {
         res.status(500).json({error: 'Error al actualizar el post'});
 
     }
+
 }
+
+
+
+const eliminarPost = async (req, res) => {
+
+    try{
+
+        const result = await pool.query('DELETE FROM posts WHERE id_post = $1', [req.params.id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({error: 'No se encontró el post'});
+        }
+
+        res.json({message: 'Post eliminado exitosamente'});
+
+    } catch (error) {
+
+        console.error('Error al eliminar post:', error);
+        res.status(500).json({error: 'Error al eliminar post'});
+    }
+
+}
+
+
+
 
 module.exports = {
     obtenerPosts,
     obtenerPost,
     obtenerPostsPorAutor,
     crearPost,
-    actualizarPost
+    actualizarPost,
+    eliminarPost
 }
