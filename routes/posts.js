@@ -5,7 +5,7 @@ const router = express.Router();
 const pool = require('../config/dbConnect');
 
 const { validarPost, validarId, validarPublished } = require('../utils/validators.js');
-const { obtenerPosts } = require('../controllers/postsController.js');
+const { obtenerPosts, obtenerPost } = require('../controllers/postsController.js');
 
 /*=================================================================================================================================================================
                                                         ENDPOINTS CRUD PARA POSTS
@@ -29,32 +29,17 @@ router.get('/', (req, res, next) => {
 
 
 //GET api/posts/:id - OBTENER UN POST POR ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', (req, res, next) => {
 
     const errorValidacion = validarId(req.params.id);
 
     if(errorValidacion) {
         return res.status(400).json({error: errorValidacion});
     }
+
+    next();
     
-
-    try{
-
-        const result = await pool.query('SELECT * FROM posts WHERE id_post = $1', [req.params.id]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({error: 'No se pudo encontrar el post'});
-        }
-
-        res.json(result.rows[0]);
-
-    } catch (error) {
-
-        console.error('Error al obtener el post:', error);
-        res.status(500).json({error: 'Error al obtener el post'})
-    }
-
-})
+}, obtenerPost)
 
 
 

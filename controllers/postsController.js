@@ -27,6 +27,28 @@ const obtenerPosts = async (req, res) => {
 
 
 
+const obtenerPost = async (req, res) => {
+
+    try{
+
+        const result = await pool.query('SELECT * FROM posts WHERE id_post = $1', [req.params.id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({error: 'No se pudo encontrar el post'});
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (error) {
+
+        console.error('Error al obtener el post:', error);
+        res.status(500).json({error: 'Error al obtener el post'});
+
+    }
+}
+
+
 module.exports = {
-    obtenerPosts
+    obtenerPosts,
+    obtenerPost
 }
