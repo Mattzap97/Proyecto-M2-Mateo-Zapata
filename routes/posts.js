@@ -5,7 +5,7 @@ const router = express.Router();
 const pool = require('../config/dbConnect');
 
 const { validarPost, validarId, validarPublished } = require('../utils/validators.js');
-const { obtenerPosts, obtenerPost } = require('../controllers/postsController.js');
+const { obtenerPosts, obtenerPost, obtenerPostsPorAutor, crearPost } = require('../controllers/postsController.js');
 
 /*=================================================================================================================================================================
                                                         ENDPOINTS CRUD PARA POSTS
@@ -45,64 +45,35 @@ router.get('/:id', (req, res, next) => {
 
 
 //GET /api/posts/author/:authorId - OBTENER POSTS POR AUTOR
-router.get('/author/:authorId', async (req, res) => {
+router.get('/author/:authorId', (req, res, next) => {
 
-    try {
+    const errorValidacion = validarId(req.params.authorId);
 
-        const result = await pool.query ('SELECT * FROM posts WHERE author_id = $1 ORDER BY created_at DESC',
-            [req.params.authorId]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({error: 'No se encontró post relacionado al autor'})
-        }
-
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error('Error obteniendo posts del autor:', error);
-        res.status(500).json({error: 'Error obteniendo posts del autor'});
-
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
     }
 
-})
+    next();
+
+}, obtenerPostsPorAutor)
 
 
 
 
 //POST api/posts - CREAR UN NUEVO POST
-router.post('/', async (req, res) => {
-    const { title, content, author_id, published } = req.body;
+router.post('/', (req, res, next) => {
 
+    const { title, content, author_id } = req.body;
+    
     const errorValidacion = validarPost(title, content, author_id);
 
     if(errorValidacion) {
         return res.status(400).json({error: errorValidacion});
     }
 
-    try {
+    next();
 
-        const result = await pool.query('INSERT INTO posts (title, content, author_id, published) VALUES ($1, $2, $3, $4) RETURNING *',
-            [title, content, author_id, published || false]
-        );
-
-        res.status(201).json({
-            message: 'Post creado exitosamente',
-            post: result.rows[0]
-        });
-
-    } catch (error) {
-        console.error('Error al crear post:', error);
-
-        if (error.code === '23503') {
-            return res.status(404).json({error: 'El autor especificado no existe'});
-        }
-
-        res.status(500).json({error: 'Error al crear post'});
-    }
-
-})
+}, crearPost)
 
 
 
