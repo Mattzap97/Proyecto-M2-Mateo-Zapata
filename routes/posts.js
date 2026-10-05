@@ -5,6 +5,7 @@ const router = express.Router();
 const pool = require('../config/dbConnect');
 
 const { validarPost, validarId, validarPublished } = require('../utils/validators.js');
+const { obtenerPosts } = require('../controllers/postsController.js');
 
 /*=================================================================================================================================================================
                                                         ENDPOINTS CRUD PARA POSTS
@@ -12,38 +13,17 @@ const { validarPost, validarId, validarPublished } = require('../utils/validator
 
 
 //GET /api/posts - OBTENER TODOS LOS POSTS
-router.get('/',  async (req, res) => {
+router.get('/', (req, res, next) => {
 
-    const { published } = req.query;
-
-    const errorValidacion = validarPublished(published);
+    const errorValidacion = validarPublished(req.query.published);
 
     if(errorValidacion) {
         return res.status(400).json({error: errorValidacion});
     }
 
-    try{
-        let query = 'SELECT * FROM posts';
-        let params = [];
+    next();
 
-        if (published !== undefined) {
-            query += ' WHERE published = $1';
-            params.push(published === 'true');
-        }
-
-        query += ' ORDER BY created_at ASC';
-
-        const result = await pool.query(query, params);
-        res.json(result.rows);
-
-    } catch (error) {
-
-        console.error('Error al obtener posts:', error);
-        res.status(500).json({error: 'Error al obtener posts'});
-
-    }
-
-})
+}, obtenerPosts);
 
 
 
