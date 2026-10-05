@@ -5,7 +5,7 @@ const router = express.Router();
 //const pool = require('../config/dbConnect');
 
 const { validarAutor, validarId } = require('../utils/validators.js');
-const { obtenerAutores, obtenerAutor } = require('../controllers/authorsController.js')
+const { obtenerAutores, obtenerAutor, crearAutor, actualizarAutor } = require('../controllers/authorsController.js')
 
 /*=====================================================================================================================================
                                                 ENDPOINTS CRUD PARA AUTHORS
@@ -74,7 +74,7 @@ router.get('/:id', (req, res, next) => {
 
 
 //POST /api/authors - CREAR UN NUEVO AUTOR
-router.post('/', async (req, res) => {
+/*router.post('/', async (req, res) => {
 
     const { name, email, bio } = req.body;
     
@@ -105,13 +105,26 @@ router.post('/', async (req, res) => {
         res.status(500).json({error: 'Error al crear autor'});
     }
 
-})
+})*/
+router.post('/', (req, res, next) => {
+
+    const { name, email } = req.body;
+
+    const errorValidacion = validarAutor(name, email);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
+
+    next();
+
+}, crearAutor)
 
 
 
 
 //PUT /api/authors/:id - ACTUALIZAR UN AUTOR
-router.put('/:id', async (req, res) => {
+/*router.put('/:id', async (req, res) => {
     const { name, email, bio } = req.body;
 
     const errorValidacion = validarId(req.params.id);
@@ -144,7 +157,18 @@ router.put('/:id', async (req, res) => {
 
         res.status(500).json({error: 'Error al actualizar autor'});
     }
-})
+})*/
+router.put('/:id', (req, res, next) => {
+
+    const errorValidacion = validarId(req.params.id);
+
+    if(errorValidacion) {
+        return res.status(400).json({error: errorValidacion});
+    }
+
+    next();
+
+}, actualizarAutor)
 
 
 
