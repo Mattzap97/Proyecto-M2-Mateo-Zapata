@@ -21,7 +21,46 @@ tags:
 
 paths:
 
+  /api/authors:
+    get:
+      tags:
+        - Authors
+      summary: Obtener todos los autores
+      description: Devuelve una lista de todos los autores registrados en la base de datos
+      responses:
+        '200':
+          description: Lista de autores obtenida correctamente
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/author'
+
 
 components:
+
+schemas:
+  Author:
+    type: object
+    properties: 
+      id_author:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: Juan Pérez
+      email:
+        type: string
+        example: juan@email.com
+      bio:
+        type: string
+        example: Escritor técnico especializado en bases de datos
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+        example: No se encontró el autor
 
 
