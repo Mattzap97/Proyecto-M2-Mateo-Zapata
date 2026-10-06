@@ -1,0 +1,18 @@
+openapi: 3.0.3
+
+info:
+  title: Miniblog API
+  description: API REST para gestionar autores y publicaciones
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Authors
+    description: Operaciones relacionadas con autores
+
+  - name: Posts
+    description: Operaciones relacionadas con publicaciones
+
+
