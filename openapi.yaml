@@ -1,18 +1,27 @@
-openapi: 3.0.3
+openapi: 3.2.0
 
 info:
   title: Miniblog API
-  description: API REST para gestionar autores y publicaciones
+  description: API REST para gestionar autores y posts
   version: 1.0.0
+  contact:
+    name: Mateo Zapata
+    email: mattalexxz@gmail.com
 
 servers:
   - url: http://localhost:3000
+    description: Servidor de desarrollo
 
 tags:
   - name: Authors
     description: Operaciones relacionadas con autores
 
   - name: Posts
-    description: Operaciones relacionadas con publicaciones
+    description: Operaciones relacionadas con posts
+
+paths:
+
+
+components:
 
 

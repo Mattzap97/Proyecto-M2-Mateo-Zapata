@@ -18,7 +18,7 @@ app.use(express.json());  //Middleware para parsear JSON
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerDocument = YAML.load();
+const swaggerDocument = YAML.load('./openapi.yaml');
 
 //=====================================================   RUTAS    ===========================================================================
 
