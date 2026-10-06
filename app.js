@@ -12,10 +12,19 @@ const app = express();
 app.use(express.json());  //Middleware para parsear JSON
 
 
+/*=======================================================================================================================================================
+                                            CONFIGURACIÓN PARA USAR SWAGGER UI EN PROYECTO EXPRESS
+=========================================================================================================================================================*/
+
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load();
+
 //=====================================================   RUTAS    ===========================================================================
 
 app.use('/api/authors', authorsRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 //RUTA RAÍZ
