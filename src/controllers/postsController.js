@@ -57,12 +57,12 @@ const obtenerPostsPorAutor = async (req, res) => {
 
     try {
 
-        const result = await pool.query ('SELECT * FROM posts WHERE author_id = $1 ORDER BY created_at DESC',
+        const result = await pool.query ('SELECT * FROM posts WHERE author_id = $1 ORDER BY created_at ASC',
             [req.params.authorId]
         );
 
         if (result.rows.length === 0) {
-            return res.status(404).json({error: 'No se encontró post relacionado al autor'})
+            return res.status(404).json({error: 'No se encontraron posts relacionados con el autor'})
         }
 
         res.json(result.rows);
