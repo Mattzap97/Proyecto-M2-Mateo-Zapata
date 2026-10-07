@@ -16,7 +16,7 @@
     "api",
     "miniblog"
   ],
-  "author": "",
+  "author": "Mateo Zapata",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
