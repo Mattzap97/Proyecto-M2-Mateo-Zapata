@@ -3,11 +3,15 @@
 ===================================================================================================================================================*/
 
 const { loadEnvFile } = require('node:process');
-const fs = require ('node:fs');
 
-if (fs.existsSync('.env')){
-    loadEnvFile('.env');
+if (process.env.NODE_ENV !== 'production') {
+    loadEnvFile('.env')
 }
+//const fs = require ('node:fs');
+
+/*if (fs.existsSync('.env')){
+    loadEnvFile('.env');
+}*/
 
 const app = require('./app');
 
