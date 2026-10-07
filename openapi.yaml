@@ -47,6 +47,8 @@ paths:
                 error: Error interno del servidor
 
 
+
+
     post:
       tags:
         - Authors
@@ -103,6 +105,7 @@ paths:
 
 
 
+
   /api/authors/{id}:
     get:
       tags:
@@ -153,6 +156,7 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 error: Error interno del servidor
+
 
 
 
@@ -230,6 +234,7 @@ paths:
 
 
 
+
     delete:
       tags: 
         - Authors
@@ -290,8 +295,6 @@ paths:
 
 
 
-
-
   /api/posts:
     get:
       tags:
@@ -335,6 +338,7 @@ paths:
                 $ref: 'components/schemas/Error'
               example:
                 error: Error interno del servidor
+
 
 
 
@@ -394,6 +398,7 @@ paths:
 
 
 
+
   /api/posts/{id}:
     get:
       tags:
@@ -444,10 +449,6 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 error: Error interno del servidor
-
-
-
-
 
 
 
@@ -516,7 +517,65 @@ paths:
                 error: Error interno del servidor
 
 
-  
+
+
+    delete:
+      tags:
+        - Posts
+      summary: Eliminar un post
+      description: Elimina un post existente mediante su ID.
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del post
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+        '200':
+          description: Post eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Post eliminado exitosamente
+
+        '400':
+          description: ID inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: El ID debe ser un número
+
+        '404':
+          description: Post no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: No se pudo encontrar el post
+
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Error interno del servidor
+
+
+
+
   /api/posts/author/{authorId}:
     get:
       tags:
