@@ -454,6 +454,25 @@ components:
 
 
 
+    PostInput:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Mi primer post
+        content:
+          type: string
+          example: Este es el contenido de mi primer post
+        author_id:
+          type: integer
+          example: 16
+        published:
+          type: boolean
+          example: false
+      
+
+
+
     Error:
       type: object
       properties:
