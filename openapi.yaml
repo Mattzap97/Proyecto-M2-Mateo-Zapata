@@ -58,7 +58,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#components/schemas/Author'
+              $ref: '#components/schemas/AuthorInput'
 
       responses:
         '201':
@@ -177,6 +177,24 @@ components:
         bio:
           type: string
           example: Escritor técnico especializado en bases de datos
+
+
+
+    AuthorInput:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Juan Pérez
+        email:
+          type: string
+          example: juan@email.com
+        bio:
+          type: string
+          example: Escritor técnico especializado en bases de datos
+
+
+
     Error:
       type: object
       properties:
