@@ -1,4 +1,4 @@
-### Registro de prompts utilizados para el uso de la inteligencia artificial.
+# Registro de prompts utilizados para el uso de la inteligencia artificial.
 
 Durante el desarrollo del proyecto se utilizaron varias aplicaciones de inteligencia artificial para recibir guía y asistencia; además complementar conocimiento adquirido para implementar mejoras en la API y que su funcionamiento no se vea afectado al momento de realizar cambios en la lógica y modularización del código.
 
@@ -47,6 +47,24 @@ Al modularizar los códigos que manejan la lógica de la API, puedo borrar este 
 <img src="./assets/REPETIDO2.png" width="24%" hspace="40" alt="captura de pantalla">
 
 La respuesta de la IA ayudó a entender que al eliminar un código repetido que ya está siendo usado dentro de otro archivo JS no rompería nada del proyecto y más bien fue recomendable hacerlo.
+
+## Prompt:
+Describir funcionamiento de la arquitectura actual del proyecto.
+
+<p align="center">
+<img src="./assets/DESCRIBIRFUNCIONAMIENTO.png" width="60%" hspace="80" alt="captura de pantalla">
+  
+La respuesta de la IA ayudó a comprender que ya no se necesitaría más modificación en la estructura actual y brindó una retroalimentación sobre el funcionamiento actual.
+
+## Prompt:
+Consultar el funcionamiento de module.exports
+
+<p align="center">
+<img src="./assets/FUNCIONAMIENTOME.png" width="60%" hspace="80" alt="captura de pantalla">
+  
+La respuesta de la IA ayudó a comprender de mejor manera la forma correcta de exportar el router dentro del proyecto
+
+
 
 
 
