@@ -33,7 +33,8 @@ app.get('/', (req, res) => {
         message: 'Miniblog API funcionando correctamente',
         endpoints: {
             authors:'/api/authors',
-            posts: '/api/posts'
+            posts: '/api/posts',
+            swagger: '/api-docs'
         }
     })
 });
