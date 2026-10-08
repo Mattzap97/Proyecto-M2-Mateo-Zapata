@@ -9,6 +9,9 @@ info:
     email: mattalexxz@gmail.com
 
 servers:
+  - url: https://proyecto-m2-mateo-zapata-production.up.railway.app/
+    description: Servidor de producción
+    
   - url: http://localhost:3000
     description: Servidor de desarrollo
 
