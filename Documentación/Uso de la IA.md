@@ -62,7 +62,15 @@ Consultar el funcionamiento de module.exports
 <p align="center">
 <img src="./assets/FUNCIONAMIENTOME.png" width="60%" hspace="80" alt="captura de pantalla">
   
-La respuesta de la IA ayudó a comprender de mejor manera la forma correcta de exportar el router dentro del proyecto
+La respuesta de la IA ayudó a comprender de mejor manera la forma correcta de exportar el router dentro del proyecto.
+
+## Prompt:
+Y si en vez de agregar AuthorInput, eliminamos la parte de id_author dentro del schema Author?
+<p align="center">
+<img src="./assets/AUTHORINPUT1.png" width="24%" hspace="40" alt="captura de pantalla">
+<img src="./assets/AUTHORINPUT2.png" width="24%" hspace="40" alt="captura de pantalla">
+
+La respuesta de la IA ayudó a comprender que era necesario crear un nuevo schema dentro de components al momento de realizar la documentación en OpenAPI.
 
 
 
