@@ -1,6 +1,7 @@
 const { loadEnvFile } = require('node:process');
+const fs = require('node:fs');
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && fs.existsSync('.env')) {
     loadEnvFile('.env')
 }
 
