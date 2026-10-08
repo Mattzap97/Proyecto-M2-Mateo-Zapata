@@ -348,6 +348,19 @@ Después del deployment:
 
 ![Captura de pantalla](Documentación/assets/CHECK.png)
 
+### ℹ Uso de la Inteligencia Artificial
+Durante el desarrollo de la API se usó la IA como asistente y herramienta de apoyo para:
+- Sugerencia de cómo iniciar el proyecto y aspectos a tomar en cuenta como punto de partida.
+- Guía para la estructura del proyecto; mejora en la distribución de carpetas.
+- Complementar conocimientos junto con el aprendizaje adquirido en el módulo.
+- Conectar la base de datos dentro de PostgreSQL sin complicaciones y verificar su conexión con Express realizando pruebas de endpoints en Thunder Client.
+- Asistencia para establecer el manejo de errores y comprobar el funcionamiento de respuestas esperadas.
+- Guía para mejorar la documentación en OpenAPI/Swagger y comprobar la interfaz esperada para recibir todos los endpoints establecidos.
+- Modularización de la lógica dentro de las rutas, endpoints y manejo de errores con respuestas HTTP para evitar repetir código permitiendo que el proyecto sea más legible y ordenado.
+- Asistencia para resolver problemas durante el deployment de la API en Railway.
+
+Los prompts utilizados y la evidencia visual de cómo la inteligencia artificial influyó para el desarrollo de este proyecto están documentados en
+
 ## 👨‍💻 Autor
 
 **Mateo Zapata**
