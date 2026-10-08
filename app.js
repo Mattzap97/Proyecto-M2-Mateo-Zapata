@@ -20,6 +20,14 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./openapi.yaml');
 
+swaggerDocument.servers = [
+    {
+        url: process.env.NODE_ENV === 'production'
+            ? 'https://proyecto-m2-mateo-zapata-production.up.railway.app/'
+            : 'http://localhost:3000'
+    }
+]
+
 //=====================================================   RUTAS    ===========================================================================
 
 app.use('/api/authors', authorsRouter);
