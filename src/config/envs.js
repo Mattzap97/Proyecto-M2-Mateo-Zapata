@@ -5,6 +5,8 @@ if (process.env.NODE_ENV !== 'production' && fs.existsSync('.env')) {
     loadEnvFile('.env')
 }
 
+const PORT = process.env.PORT || 3000;
+
 const DATABASE_URL = process.env.DATABASE_URL
 
 const DB_HOST = process.env.DB_HOST
@@ -19,5 +21,6 @@ module.exports = {
     DB_NAME,
     DB_USER,
     DB_PASSWORD,
-    DATABASE_URL
+    DATABASE_URL,
+    PORT
 }
