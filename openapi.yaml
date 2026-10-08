@@ -12,6 +12,9 @@ servers:
   - url: http://localhost:3000
     description: Servidor de desarrollo
 
+  - url: https://proyecto-m2-mateo-zapata-production.up.railway.app
+    description: Servidor de producción
+
 tags:
   - name: Authors
     description: Operaciones relacionadas con autores
